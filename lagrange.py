@@ -1,9 +1,4 @@
-from functools import reduce
-import matplotlib.pyplot as plt
-from numpy import linspace
-
-
-class Pont:
+class Vertex:
     x: float
     y: float
 
@@ -12,67 +7,62 @@ class Pont:
         self.y = y
 
 
-pontok: list[Pont] = [
-    Pont(-2, -39),
-    Pont(-1, -5),
-    Pont(0, -5),
-    Pont(1, 3),
-    Pont(2, 25)
-]
+def lagrange_interpolation(vertex_list: list[Vertex]):
+    sub_polinom_list: list[function] = []
 
+    for vertex in vertex_list:
+        sub_polinom_list.append(
+            lambda X, x=vertex.x, y=vertex.y: get_subpolinoms(
+                X, x, y, vertex_list
+            )
+        )
 
-xp = [p.x for p in pontok]
-yp = [p.y for p in pontok]
-#     for i, pont in enumerate(pontok):
-#         x = pont.x
-#         y = pont.y
-#         fuggvenyek.append(lambda X, x=x, y=y, pontok=pontok: alappolinom(X, x, y, pontok))
-
-
-def lagrange_interpolacio(pontok: list[Pont]):
-    alappolinomok: list[function] = []
-
-    for i, pont in enumerate(pontok):
-        x = pont.x
-        y = pont.y
-        alappolinomok.append(lambda X, x=x, y=y: alappolinom(X, x, y, pontok))
-
-    def summa(x: float):
+    def sum(x: float):
         result = 0
-
-        print('-' * 10)
-        for polinom in alappolinomok:
+        for polinom in sub_polinom_list:
             result += polinom(x)
-        print('-' * 10)
         return result
 
-    return summa
+    return sum
 
 
-def alappolinom(X: float, x: float, y: float, pontok: list[Pont]):
+def get_subpolinoms(X: float, x: float, y: float, vertex_list: list[Vertex]):
     L: float = 1
-    Ln: list[str] = []
-    for pont in pontok:
-        if x != pont.x:
-            Ln.append('((x-'+str(pont.x)+')/('+str(x)+'-'+str(pont.x)+'))')
-            L *= (X-pont.x)/(x-pont.x)
-    print('*'.join(Ln).replace('--', '+'))
+    for vertex in vertex_list:
+        if x != vertex.x:
+            L *= (X-vertex.x)/(x-vertex.x)
     return L * y
 
 
-lagrange = lagrange_interpolacio(pontok)
+def lagrange_interpolation_str(vertex_list: list[Vertex]):
 
-fromx = min(xp)
-tox = max(xp)
+    result = ('-' * 10) + 'subPolinoms' + ('-' * 10) + '\n'
 
-fromy = min(yp)
-toy = max(yp)
+    for vertex in vertex_list:
+        result += get_subpolinoms_str(vertex.x, vertex.y, vertex_list)
 
-linex = linspace(fromx, tox, 100)
-print(linex)
-liney = [lagrange(x=x) for x in linex]
+    result = result[:-2] + '\n' + ('-' * 31)
+
+    return result
 
 
-plt.plot(linex, liney)
-plt.plot(xp, yp, 'ro')
-plt.show()
+def get_subpolinoms_str(x: float, y: float, vertex_list: list[Vertex]):
+
+    result = '('
+
+    for vertex in vertex_list:
+        if x != vertex.x:
+            result += get_subpolinom_str(x, vertex.x)
+
+    result = result[:-1] + ') * (' + str(y) + ') +\n'
+
+    return result
+
+
+def get_subpolinom_str(x, vertex_x):
+    return replace_nn_p(
+        ' ((x-' + str(vertex_x) + ')/(' + str(x) + '-' + str(vertex_x) + ')) *'
+    )
+
+
+def replace_nn_p(string: str): return string.replace('--', '+')
