@@ -20,8 +20,8 @@ pontok: list[Pont] = [
 ]
 
 
-xp = [p[0] for p in pontok]
-yp = [p[1] for p in pontok]
+xp = [p.x for p in pontok]
+yp = [p.y for p in pontok]
 
 
 def lagrange_interpolacio(pontok: list[Pont]):
