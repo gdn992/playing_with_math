@@ -1,10 +1,11 @@
 from functools import reduce
 import matplotlib.pyplot as plt
+from numpy import linspace
 
 
 class Pont:
-    x: int
-    y: int
+    x: float
+    y: float
 
     def __init__(self, x, y):
         self.x = x
@@ -14,7 +15,7 @@ class Pont:
 pontok: list[Pont] = [
     Pont(-2, -39),
     Pont(-1, -5),
-    Pont(0, 1),
+    Pont(0, -5),
     Pont(1, 3),
     Pont(2, 25)
 ]
@@ -22,29 +23,56 @@ pontok: list[Pont] = [
 
 xp = [p.x for p in pontok]
 yp = [p.y for p in pontok]
+#     for i, pont in enumerate(pontok):
+#         x = pont.x
+#         y = pont.y
+#         fuggvenyek.append(lambda X, x=x, y=y, pontok=pontok: alappolinom(X, x, y, pontok))
 
 
 def lagrange_interpolacio(pontok: list[Pont]):
     alappolinomok: list[function] = []
 
-    for pont in pontok:
-        alappolinomok.append(lambda x: alappolinom(x, pont, pontok) * pont.y)
+    for i, pont in enumerate(pontok):
+        x = pont.x
+        y = pont.y
+        alappolinomok.append(lambda X, x=x, y=y: alappolinom(X, x, y, pontok))
 
-    def summa(x): return reduce(lambda pn, pn1: pn(x) + pn1(x), alappolinomok)
+    def summa(x: float):
+        result = 0
+
+        print('-' * 10)
+        for polinom in alappolinomok:
+            result += polinom(x)
+        print('-' * 10)
+        return result
+
     return summa
 
 
-def alappolinom(x, pont: Pont, pontok: list[Pont]):
-    Lk = []
-    for pontk in pontok:
-        if pont.x != pontk.x:
-            Lk.append((x-pont.x)/(pontk.x-pont.x))
-    return reduce(lambda x, y: x * y, Lk)
+def alappolinom(X: float, x: float, y: float, pontok: list[Pont]):
+    L: float = 1
+    Ln: list[str] = []
+    for pont in pontok:
+        if x != pont.x:
+            Ln.append('((x-'+str(pont.x)+')/('+str(x)+'-'+str(pont.x)+'))')
+            L *= (X-pont.x)/(x-pont.x)
+    print('*'.join(Ln).replace('--', '+'))
+    return L * y
 
 
 lagrange = lagrange_interpolacio(pontok)
 
-plt.plot(lagrange)
+fromx = min(xp)
+tox = max(xp)
+
+fromy = min(yp)
+toy = max(yp)
+
+linex = linspace(fromx, tox, 100)
+print(linex)
+liney = [lagrange(x=x) for x in linex]
+
+
+plt.plot(linex, liney)
 plt.plot(xp, yp, 'ro')
-plt.axis([-3, 3, -40, 30])
 plt.show()
