@@ -1,17 +1,16 @@
 import matplotlib.pyplot as plt
 from numpy import linspace
 
-from lagrange import Vertex, lagrange_interpolation, lagrange_interpolation_str
+from lagrange import Point, lagrange_interpolation, lagrange_interpolation_str
 
 
-vertexes: list[Vertex] = [
-    Vertex(-4, -1),
-    Vertex(-3, -5),
-    Vertex(-2, 0),
-    Vertex(-1, -2),
-    Vertex(0, 0),
-    Vertex(1, 9),
-    Vertex(4, 12)
+vertexes: list[Point] = [
+    Point(-2, -39),
+    Point(-1, -5),
+    Point(0, 100),
+    Point(1, -5),
+    Point(2, 3),
+    Point(3, 25)
 ]
 
 
@@ -27,11 +26,10 @@ tox = max(xp)
 fromy = min(yp)
 toy = max(yp)
 
-res = lagrange_interpolation_str(vertexes)
-print(res)
+print(lagrange_interpolation_str(vertexes))
+
 linex = linspace(fromx, tox, 100)
 liney = [lagrange(x=x) for x in linex]
-
 
 plt.plot(linex, liney)
 plt.plot(xp, yp, 'ro')

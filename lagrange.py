@@ -1,4 +1,4 @@
-class Vertex:
+class Point:
     x: float
     y: float
 
@@ -7,13 +7,13 @@ class Vertex:
         self.y = y
 
 
-def lagrange_interpolation(vertex_list: list[Vertex]):
+def lagrange_interpolation(point_list: list[Point]):
     sub_polinom_list: list[function] = []
 
-    for vertex in vertex_list:
+    for point in point_list:
         sub_polinom_list.append(
-            lambda X, x=vertex.x, y=vertex.y: get_subpolinoms(
-                X, x, y, vertex_list
+            lambda X, x=point.x, y=point.y: get_subpolinoms(
+                X, x, y, point_list
             )
         )
 
@@ -26,27 +26,27 @@ def lagrange_interpolation(vertex_list: list[Vertex]):
     return sum
 
 
-def get_subpolinoms(X: float, x: float, y: float, vertex_list: list[Vertex]):
+def get_subpolinoms(X: float, x: float, y: float, point_list: list[Point]):
     L: float = 1
-    for vertex in vertex_list:
-        if x != vertex.x:
-            L *= (X-vertex.x)/(x-vertex.x)
+    for point in point_list:
+        if x != point.x:
+            L *= (X-point.x)/(x-point.x)
     return L * y
 
 
-def lagrange_interpolation_str(vertex_list: list[Vertex]):
+def lagrange_interpolation_str(point_list: list[Point]):
 
     result = ('-' * 10) + 'subPolinoms' + ('-' * 10) + '\n'
 
-    for vertex in vertex_list:
-        result += get_subpolinoms_str(vertex.x, vertex.y, vertex_list)
+    for point in point_list:
+        result += get_subpolinoms_str(point.x, point.y, point_list)
 
     result = result[:-2] + '\n' + ('-' * 31)
 
     return result
 
 
-def get_subpolinoms_str(x: float, y: float, vertex_list: list[Vertex]):
+def get_subpolinoms_str(x: float, y: float, vertex_list: list[Point]):
 
     result = '('
 
