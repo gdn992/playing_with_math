@@ -5,12 +5,13 @@ from lagrange import Point, lagrange_interpolation, lagrange_interpolation_str
 
 
 vertexes: list[Point] = [
-    Point(-2, -39),
-    Point(-1, -5),
-    Point(0, 100),
-    Point(1, -5),
-    Point(2, 3),
-    Point(3, 25)
+    Point(-4, -1),
+    Point(-3, -5),
+    Point(-2, 0),
+    Point(-1, -2),
+    Point(0, 0),
+    Point(1, 9),
+    Point(4, 12)
 ]
 
 
@@ -30,6 +31,7 @@ print(lagrange_interpolation_str(vertexes))
 
 linex = linspace(fromx, tox, 100)
 liney = [lagrange(x=x) for x in linex]
+
 
 plt.plot(linex, liney)
 plt.plot(xp, yp, 'ro')
