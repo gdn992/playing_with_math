@@ -8,7 +8,7 @@ class Point:
 
 
 def lagrange_interpolation(point_list: list[Point]):
-    sub_polinom_list: list[function] = []
+    sub_polinom_list = []
 
     for point in point_list:
         sub_polinom_list.append(
@@ -17,13 +17,13 @@ def lagrange_interpolation(point_list: list[Point]):
             )
         )
 
-    def sum(x: float):
+    def sum_polinoms(x: float):
         result = 0
         for polinom in sub_polinom_list:
             result += polinom(x)
         return result
 
-    return sum
+    return sum_polinoms
 
 
 def get_subpolinoms(X: float, x: float, y: float, point_list: list[Point]):
