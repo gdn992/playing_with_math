@@ -1,6 +1,6 @@
 from functools import partial
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QWidget
+
+from PyQt5.QtWidgets import QWidget, QPushButton, QButtonGroup, QHBoxLayout
 
 from src.model.HeaderButtonComponent import HeaderButtonComponent
 
@@ -8,12 +8,12 @@ from src.model.HeaderButtonComponent import HeaderButtonComponent
 class HeaderWindow(QWidget):
     def __init__(self, header_button_components: list[HeaderButtonComponent], button_click: callable):
         super(HeaderWindow, self).__init__()
-        layout = QtWidgets.QHBoxLayout(self)
+        layout = QHBoxLayout(self)
 
-        self.buttons = QtWidgets.QButtonGroup(self)
+        self.buttons = QButtonGroup(self)
 
         for header_button_component in header_button_components:
-            button = QtWidgets.QPushButton()
+            button = QPushButton()
             self.buttons.addButton(button)
 
             button.setText(header_button_component.name)

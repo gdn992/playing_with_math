@@ -1,6 +1,3 @@
-from PyQt5.QtWidgets import QWidget
-
-
 class HeaderButtonComponent:
     component: any
     name: str

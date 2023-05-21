@@ -1,20 +1,23 @@
 from functools import partial
 
-from PyQt5 import QtWidgets
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QVBoxLayout, QWidget, QPushButton
 
 from src.components.pointWidget import PointWidget
+
 from src.math.lagrange import Point
 
 
 class PointListWidget(QWidget):
     points: list[Point]
 
-    def __init__(self, initial_points: list[Point] = None):
+    def __init__(self, calculate: callable, initial_points: list[Point] = None):
         super(PointListWidget, self).__init__()
+
         # set vertical layout
-        self.setLayout(QtWidgets.QVBoxLayout(self))
+        self.setLayout(QVBoxLayout(self))
+        self.calculate = calculate
 
         # created AddButton and connected to the layout
         self.add_button = QPushButton(self)
@@ -32,15 +35,18 @@ class PointListWidget(QWidget):
 
         self.build_points()
         self.layout().addWidget(self.points_widget)
+        self.layout().setSpacing(0)
+        self.layout().setAlignment(Qt.AlignTop)
 
     def build_points(self):
         for index, point in enumerate(self.points):
+            print(index)
             self.points_widget.layout().addWidget(
                 PointWidget(
                     remove_button_click=partial(self.remove_point, index),
                     point=point,
                     spin_x_changed=partial(self.spin_x_changed, index),
-                    spin_y_changed=self.spin_y_changed,
+                    spin_y_changed=partial(self.spin_y_changed, index),
                 ))
 
     def remove_points(self):
@@ -52,6 +58,7 @@ class PointListWidget(QWidget):
     def rebuild_points(self):
         self.remove_points()
         self.build_points()
+        self.calculate(self.points)
 
     def remove_point(self, index: int):
         self.points.pop(index)

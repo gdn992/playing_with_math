@@ -2,6 +2,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QVBoxLayout, QWidget, QStackedWidget
 
 from src.math.lagrange import Point
+
 from src.model.HeaderButtonComponent import HeaderButtonComponent
 from src.view.contentWindow import ContentWindow
 from src.view.headerWindow import HeaderWindow
@@ -22,9 +23,8 @@ class MainWindow(QWidget):
     content: QStackedWidget
 
     components: list[HeaderButtonComponent] = [
-        HeaderButtonComponent(component=LagrangeWindow, name='1Lagrange interpolation'),
-        HeaderButtonComponent(component=ContentWindow, name='2Lagrange interpolation'),
-        HeaderButtonComponent(component=LagrangeWindow, name='3Lagrange interpolation')
+        HeaderButtonComponent(component=LagrangeWindow, name='Lagrange interpolation'),
+        HeaderButtonComponent(component=ContentWindow, name='Content')
     ]
 
     def __init__(self):
