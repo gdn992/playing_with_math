@@ -3,6 +3,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QWidget, QPushButton
 from numpy import linspace
 
+from src.components.pointListWidget import PointListWidget
 from src.math.lagrange import Point, lagrange_interpolation, lagrange_interpolation_str
 
 
@@ -22,12 +23,16 @@ class LagrangeWindow(QWidget):
         ]
 
         layout = QtWidgets.QHBoxLayout(self)
-        self.setLayout(layout)
 
-        self.button = QPushButton("lagrange interpolation ", self)
-        self.button.setGeometry(150, 150, 100, 50)
-        self.button.clicked.connect(self.calculate_button_click)
-        layout.addWidget(self.button)
+        self.calculate_button = QPushButton(self)
+        self.point_list = PointListWidget(initial_points=self.points)
+
+        self.calculate_button.setText("lagrange interpolation")
+        self.calculate_button.clicked.connect(self.calculate_button_click)
+
+        layout.addWidget(self.point_list, 1)
+        layout.addWidget(self.calculate_button, 0)
+
         self.setLayout(layout)
 
     def calculate_button_click(self, a2):
