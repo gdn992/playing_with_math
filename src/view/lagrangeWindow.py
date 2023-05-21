@@ -1,10 +1,19 @@
 import matplotlib.pyplot as plt
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QWidget, QPushButton
+from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
+from matplotlib.figure import Figure
 from numpy import linspace
 
 from src.components.pointListWidget import PointListWidget
 from src.math.lagrange import Point, lagrange_interpolation, lagrange_interpolation_str
+
+
+class MplCanvas(FigureCanvasQTAgg):
+    def __init__(self, parent=None, width=5, height=4, dpi=100):
+        fig = Figure(figsize=(width, height), dpi=dpi)
+        self.axes = fig.add_subplot(111)
+        super(MplCanvas, self).__init__(fig)
 
 
 class LagrangeWindow(QWidget):
@@ -12,6 +21,9 @@ class LagrangeWindow(QWidget):
 
     def __init__(self):
         super(LagrangeWindow, self).__init__()
+        self.canvas = MplCanvas(self, width=5, height=4, dpi=100)
+        self.canvas.axes.plot([0, 1, 2, 3, 4], [10, 1, 20, 3, 40])
+
         self.points: list[Point] = [
             Point(-4, -1),
             Point(-3, -5),
@@ -32,6 +44,7 @@ class LagrangeWindow(QWidget):
 
         layout.addWidget(self.point_list, 1)
         layout.addWidget(self.calculate_button, 0)
+        layout.addWidget(self.canvas, 1)
 
         self.setLayout(layout)
 
